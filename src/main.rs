@@ -12,6 +12,7 @@ use systems::{
     combat::{collision_system, explosion_damage_system, zombie_eat_system},
     gameplay::{move_bullets, move_zombies, plant_action},
     input::{button_system, input_system},
+    particles::particle_system,
     setup::setup,
     spawning::spawn_zombies,
     ui::ui_system,
@@ -42,6 +43,7 @@ fn main() {
                 zombie_eat_system, // Interactions
                 collision_system,
                 explosion_damage_system,
+                particle_system,
                 ui_system,
             ),
         )

@@ -52,3 +52,9 @@ pub struct Explosion {
     pub radius: f32,
     pub damage: f32,
 }
+
+#[derive(Component)]
+pub struct Particle {
+    pub velocity: Vec2,
+    pub timer: Timer,
+}

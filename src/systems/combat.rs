@@ -1,6 +1,7 @@
 use crate::components::*;
 use crate::constants::*;
 use bevy::prelude::*;
+use rand::Rng;
 
 // Logic for zombies eating plants + collisions
 pub fn zombie_eat_system(
@@ -36,6 +37,29 @@ pub fn zombie_eat_system(
                                 },
                             ));
                             commands.entity(plant_entity).despawn_recursive();
+
+                            // Spawn Particles
+                            let mut rng = rand::thread_rng();
+                            for _ in 0..12 {
+                                let vx: f32 = rng.gen_range(-150.0..150.0);
+                                let vy: f32 = rng.gen_range(-150.0..150.0);
+                                commands.spawn((
+                                    SpriteBundle {
+                                        sprite: Sprite {
+                                            color: Color::rgb(0.8, 0.5, 0.2), // Potato color ish
+                                            custom_size: Some(Vec2::new(10.0, 10.0)),
+                                            ..default()
+                                        },
+                                        transform: *plant_transform,
+                                        ..default()
+                                    },
+                                    Particle {
+                                        velocity: Vec2::new(vx, vy),
+                                        timer: Timer::from_seconds(0.8, TimerMode::Once),
+                                    },
+                                ));
+                            }
+
                             // Zombie is not despawned here, will be caught by explosion system
                             break;
                         }
@@ -63,6 +87,29 @@ pub fn zombie_eat_system(
                             },
                         ));
                         commands.entity(p_entity).despawn_recursive();
+
+                        // Spawn Particles
+                        let mut rng = rand::thread_rng();
+                        for _ in 0..12 {
+                            let vx: f32 = rng.gen_range(-150.0..150.0);
+                            let vy: f32 = rng.gen_range(-150.0..150.0);
+                            commands.spawn((
+                                SpriteBundle {
+                                    sprite: Sprite {
+                                        color: Color::rgb(0.8, 0.5, 0.2),
+                                        custom_size: Some(Vec2::new(10.0, 10.0)),
+                                        ..default()
+                                    },
+                                    transform: *p_transform,
+                                    ..default()
+                                },
+                                Particle {
+                                    velocity: Vec2::new(vx, vy),
+                                    timer: Timer::from_seconds(0.8, TimerMode::Once),
+                                },
+                            ));
+                        }
+
                         zombie.state = ZombieState::Walking; // Stop eating
                         continue;
                     }
