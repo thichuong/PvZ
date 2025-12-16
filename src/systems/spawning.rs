@@ -11,7 +11,7 @@ pub fn spawn_zombies(mut commands: Commands, time: Res<Time>, mut spawn_timer: R
         let row = rng.gen_range(0..ROWS);
 
         // Match grid calcs from setup
-        let grid_width_px = COLS as f32 * TILE_SIZE;
+        // let grid_width_px = COLS as f32 * TILE_SIZE; // Unused
         let grid_height_px = ROWS as f32 * TILE_SIZE;
         let start_x = -SCREEN_WIDTH / 2.0 + TILE_SIZE / 2.0 + 50.0;
         let start_y = -grid_height_px / 2.0 + TILE_SIZE / 2.0;
@@ -100,7 +100,7 @@ pub fn spawn_plant(
     // Default logic
     let mut health = 100.0;
     let mut timer = Timer::from_seconds(1.0, TimerMode::Repeating);
-    let mut armed = false;
+    let armed = false;
 
     match plant_type {
         PlantType::Peashooter => timer = Timer::from_seconds(1.5, TimerMode::Repeating),

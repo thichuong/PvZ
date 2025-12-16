@@ -4,6 +4,7 @@ use crate::resources::*;
 use crate::systems::spawning::spawn_plant;
 use bevy::prelude::*;
 
+#[allow(clippy::type_complexity)]
 pub fn button_system(
     mut interaction_query: Query<
         (&Interaction, &PlantButton, &mut BackgroundColor),
@@ -67,7 +68,7 @@ pub fn input_system(
             let col = ((world_position.x - grid_base_x) / TILE_SIZE).floor() as i32;
             let row = ((world_position.y - grid_base_y) / TILE_SIZE).floor() as i32;
 
-            if col >= 0 && col < COLS && row >= 0 && row < ROWS {
+            if (0..COLS).contains(&col) && (0..ROWS).contains(&row) {
                 // Check occupancy
                 if existing_plants
                     .iter()

@@ -9,7 +9,7 @@ pub fn zombie_eat_system(
     mut zombie_query: Query<(Entity, &Transform, &mut Zombie)>,
     mut plant_query: Query<(Entity, &Transform, &mut Plant)>,
 ) {
-    for (zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
+    for (_zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
         match zombie.state {
             ZombieState::Walking => {
                 // Check if colliding with any plant

@@ -7,7 +7,7 @@ pub fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 
     // Grid Background (Left side)
-    let grid_width_px = COLS as f32 * TILE_SIZE;
+    // let grid_width_px = COLS as f32 * TILE_SIZE; // Unused
     let grid_height_px = ROWS as f32 * TILE_SIZE;
     let start_x = -SCREEN_WIDTH / 2.0 + TILE_SIZE / 2.0 + 50.0; // Left align with margin
     let start_y = -grid_height_px / 2.0 + TILE_SIZE / 2.0;
