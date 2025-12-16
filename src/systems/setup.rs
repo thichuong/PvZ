@@ -1,4 +1,4 @@
-use crate::components::{PlantButton, PlantType, SunText};
+use crate::components::{PlantType, SunText, Tool, ToolButton};
 use crate::constants::{
     COLOR_GRASS_1, COLOR_GRASS_2, COLOR_PEASHOOTER_HEAD, COLOR_POTATOMINE_BODY,
     COLOR_SUNFLOWER_PETALS, COLOR_SUN_TEXT, COLOR_WALLNUT_BODY, COLS, COST_PEASHOOTER,
@@ -102,7 +102,7 @@ pub fn setup(mut commands: Commands) {
                 background_color: Color::DARK_GRAY.into(),
                 ..default()
             })
-            .insert(PlantButton(*ptype))
+            .insert(ToolButton(Tool::Plant(*ptype)))
             .with_children(|parent| {
                 // Icon preview
                 parent.spawn(NodeBundle {
@@ -128,4 +128,87 @@ pub fn setup(mut commands: Commands) {
                 );
             });
     }
+
+    // Shovel Button
+    commands
+        .spawn(ButtonBundle {
+            style: Style {
+                width: Val::Px(80.0),
+                height: Val::Px(60.0),
+                position_type: PositionType::Absolute,
+                right: Val::Px(10.0),
+                top: Val::Px((plants.len() as f32).mul_add(70.0, 50.0)),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                flex_direction: FlexDirection::Column,
+                ..default()
+            },
+            background_color: Color::DARK_GRAY.into(),
+            ..default()
+        })
+        .insert(ToolButton(Tool::Shovel))
+        .with_children(|parent| {
+            // Shovel Icon Container
+            parent
+                .spawn(NodeBundle {
+                    style: Style {
+                        width: Val::Px(30.0),
+                        height: Val::Px(30.0),
+                        display: Display::Flex,
+                        flex_direction: FlexDirection::Column,
+                        align_items: AlignItems::Center,
+                        justify_content: JustifyContent::Center,
+                        margin: UiRect::bottom(Val::Px(5.0)),
+                        ..default()
+                    },
+                    ..default()
+                })
+                .with_children(|icon_parent| {
+                    // Handle Loop/Grip
+                    icon_parent.spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Px(12.0),
+                            height: Val::Px(4.0),
+                            margin: UiRect::bottom(Val::Px(0.0)),
+                            ..default()
+                        },
+                        background_color: Color::rgb(0.4, 0.2, 0.1).into(), // Brown
+                        ..default()
+                    });
+
+                    // Shaft
+                    icon_parent.spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Px(4.0),
+                            height: Val::Px(12.0),
+                            ..default()
+                        },
+                        background_color: Color::rgb(0.4, 0.2, 0.1).into(), // Brown
+                        ..default()
+                    });
+
+                    // Blade
+                    icon_parent.spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Px(16.0),
+                            height: Val::Px(14.0),
+                            ..default()
+                        },
+                        background_color: Color::SILVER.into(),
+                        ..default()
+                    });
+                });
+
+            parent.spawn(
+                TextBundle::from_section(
+                    "Shovel",
+                    TextStyle {
+                        font_size: 14.0,
+                        color: Color::WHITE,
+                        ..default()
+                    },
+                )
+                .with_text_justify(JustifyText::Center),
+            );
+        });
 }

@@ -43,8 +43,15 @@ pub struct GridCell {
 pub struct SunText;
 
 // Marked for buttons
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Tool {
+    Plant(PlantType),
+    Shovel,
+}
+
+// Marked for buttons
 #[derive(Component)]
-pub struct PlantButton(pub PlantType);
+pub struct ToolButton(pub Tool);
 
 #[derive(Component)]
 pub struct Explosion {

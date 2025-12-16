@@ -1,4 +1,4 @@
-use crate::components::{GridCell, Plant, PlantButton, PlantType};
+use crate::components::{GridCell, Plant, PlantType, Tool, ToolButton};
 use crate::constants::{
     COLS, COST_PEASHOOTER, COST_POTATOMINE, COST_SUNFLOWER, COST_WALLNUT, ROWS, SCREEN_WIDTH,
     TILE_SIZE,
@@ -10,7 +10,7 @@ use bevy::prelude::*;
 #[allow(clippy::type_complexity)]
 pub fn button_system(
     mut interaction_query: Query<
-        (&Interaction, &PlantButton, &mut BackgroundColor),
+        (&Interaction, &ToolButton, &mut BackgroundColor),
         (Changed<Interaction>, With<Button>),
     >,
     mut game_state: ResMut<GameState>,
@@ -18,14 +18,14 @@ pub fn button_system(
     for (interaction, button, mut color) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
-                game_state.selected_plant = button.0;
+                game_state.selected_tool = button.0;
                 *color = Color::GRAY.into();
             }
             Interaction::Hovered => {
                 *color = Color::rgb(0.25, 0.25, 0.25).into();
             }
             Interaction::None => {
-                if game_state.selected_plant == button.0 {
+                if game_state.selected_tool == button.0 {
                     *color = Color::rgb(0.3, 0.3, 0.3).into(); // Highlight selected
                 } else {
                     *color = Color::DARK_GRAY.into();
@@ -41,7 +41,7 @@ pub fn input_system(
     windows: Query<&Window>,
     camera_q: Query<(&Camera, &GlobalTransform)>,
     mut game_state: ResMut<GameState>,
-    existing_plants: Query<&GridCell, With<Plant>>,
+    existing_plants: Query<(Entity, &GridCell), With<Plant>>,
 ) {
     if mouse.just_pressed(MouseButton::Left) {
         let Ok((camera, camera_transform)) = camera_q.get_single() else {
@@ -71,34 +71,37 @@ pub fn input_system(
 
             if (0..COLS).contains(&col) && (0..ROWS).contains(&row) {
                 // Check occupancy
-                if existing_plants
+                let occupied_plant = existing_plants
                     .iter()
-                    .any(|cell| cell.x == col && cell.y == row)
-                {
-                    return;
-                }
+                    .find(|(_, cell)| cell.x == col && cell.y == row);
 
-                // Check cost
-                let cost = match game_state.selected_plant {
-                    PlantType::Peashooter => COST_PEASHOOTER,
-                    PlantType::Sunflower => COST_SUNFLOWER,
-                    PlantType::WallNut => COST_WALLNUT,
-                    PlantType::PotatoMine => COST_POTATOMINE,
-                };
+                match game_state.selected_tool {
+                    Tool::Plant(plant_type) => {
+                        if occupied_plant.is_some() {
+                            return;
+                        }
 
-                if game_state.sun >= cost {
-                    game_state.sun -= cost;
-                    // Center of cell
-                    let pos_x = (col as f32).mul_add(TILE_SIZE, start_x);
-                    let pos_y = (row as f32).mul_add(TILE_SIZE, start_y);
-                    spawn_plant(
-                        &mut commands,
-                        game_state.selected_plant,
-                        pos_x,
-                        pos_y,
-                        col,
-                        row,
-                    );
+                        // Check cost
+                        let cost = match plant_type {
+                            PlantType::Peashooter => COST_PEASHOOTER,
+                            PlantType::Sunflower => COST_SUNFLOWER,
+                            PlantType::WallNut => COST_WALLNUT,
+                            PlantType::PotatoMine => COST_POTATOMINE,
+                        };
+
+                        if game_state.sun >= cost {
+                            game_state.sun -= cost;
+                            // Center of cell
+                            let pos_x = (col as f32).mul_add(TILE_SIZE, start_x);
+                            let pos_y = (row as f32).mul_add(TILE_SIZE, start_y);
+                            spawn_plant(&mut commands, plant_type, pos_x, pos_y, col, row);
+                        }
+                    }
+                    Tool::Shovel => {
+                        if let Some((entity, _)) = occupied_plant {
+                            commands.entity(entity).despawn_recursive();
+                        }
+                    }
                 }
             }
         }
