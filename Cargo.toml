@@ -22,3 +22,9 @@ opt-level = 3
 [profile.release]
 lto = true
 codegen-units = 1
+
+[lints.clippy]
+pedantic = "warn"
+nursery = "warn"
+unwrap_used = "warn"
+expect_used = "warn"

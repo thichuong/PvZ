@@ -1,6 +1,6 @@
-use crate::components::*;
-use crate::constants::*;
-use crate::resources::*;
+use crate::components::{Plant, PlantType, Bullet, Zombie, ZombieState};
+use crate::constants::{COLOR_BULLET, BULLET_SPEED, SCREEN_WIDTH, ZOMBIE_SPEED};
+use crate::resources::GameState;
 use bevy::prelude::*;
 
 pub fn plant_action(
@@ -9,7 +9,7 @@ pub fn plant_action(
     mut game_state: ResMut<GameState>,
     mut query: Query<(&mut Plant, &Transform)>,
 ) {
-    for (mut plant, transform) in query.iter_mut() {
+    for (mut plant, transform) in &mut query {
         plant.timer.tick(time.delta());
 
         match plant.plant_type {
@@ -51,7 +51,7 @@ pub fn move_bullets(
     time: Res<Time>,
     mut query: Query<(Entity, &mut Transform), With<Bullet>>,
 ) {
-    for (entity, mut transform) in query.iter_mut() {
+    for (entity, mut transform) in &mut query {
         transform.translation.x += BULLET_SPEED * time.delta_seconds();
         if transform.translation.x > SCREEN_WIDTH / 2.0 {
             commands.entity(entity).despawn();
@@ -64,7 +64,7 @@ pub fn move_zombies(
     time: Res<Time>,
     mut query: Query<(Entity, &mut Transform, &Zombie)>,
 ) {
-    for (entity, mut transform, zombie) in query.iter_mut() {
+    for (entity, mut transform, zombie) in &mut query {
         if zombie.state == ZombieState::Walking {
             transform.translation.x -= ZOMBIE_SPEED * time.delta_seconds();
         }

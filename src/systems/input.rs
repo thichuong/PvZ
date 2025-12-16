@@ -1,6 +1,6 @@
-use crate::components::*;
-use crate::constants::*;
-use crate::resources::*;
+use crate::components::{PlantButton, GridCell, Plant, PlantType};
+use crate::constants::{ROWS, TILE_SIZE, SCREEN_WIDTH, COLS, COST_PEASHOOTER, COST_SUNFLOWER, COST_WALLNUT, COST_POTATOMINE};
+use crate::resources::GameState;
 use crate::systems::spawning::spawn_plant;
 use bevy::prelude::*;
 
@@ -12,7 +12,7 @@ pub fn button_system(
     >,
     mut game_state: ResMut<GameState>,
 ) {
-    for (interaction, button, mut color) in interaction_query.iter_mut() {
+    for (interaction, button, mut color) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
                 game_state.selected_plant = button.0;
@@ -88,8 +88,8 @@ pub fn input_system(
                 if game_state.sun >= cost {
                     game_state.sun -= cost;
                     // Center of cell
-                    let pos_x = start_x + col as f32 * TILE_SIZE;
-                    let pos_y = start_y + row as f32 * TILE_SIZE;
+                    let pos_x = (col as f32).mul_add(TILE_SIZE, start_x);
+                    let pos_y = (row as f32).mul_add(TILE_SIZE, start_y);
                     spawn_plant(
                         &mut commands,
                         game_state.selected_plant,

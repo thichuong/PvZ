@@ -6,7 +6,7 @@ pub fn particle_system(
     time: Res<Time>,
     mut query: Query<(Entity, &mut Transform, &mut Particle)>,
 ) {
-    for (entity, mut transform, mut particle) in query.iter_mut() {
+    for (entity, mut transform, mut particle) in &mut query {
         // Move particle
         transform.translation += particle.velocity.extend(0.0) * time.delta_seconds();
 

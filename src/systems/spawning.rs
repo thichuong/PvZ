@@ -1,6 +1,6 @@
-use crate::components::*;
-use crate::constants::*;
-use crate::resources::*;
+use crate::components::{Zombie, ZombieState, PlantType, Plant, GridCell};
+use crate::constants::{ROWS, TILE_SIZE, SCREEN_WIDTH, COLS, COLOR_ZOMBIE_LEGS, COLOR_ZOMBIE_BODY, COLOR_ZOMBIE_HEAD, COLOR_ZOMBIE_ARM, COLOR_PEASHOOTER_STEM, COLOR_PEASHOOTER_HEAD, COLOR_PEASHOOTER_SNOUT, COLOR_SUNFLOWER_STEM, COLOR_SUNFLOWER_PETALS, COLOR_SUNFLOWER_FACE, COLOR_WALLNUT_BODY, COLOR_WALLNUT_FACE, COLOR_POTATOMINE_BODY, COLOR_POTATOMINE_ARMED};
+use crate::resources::SpawnTimer;
 use bevy::prelude::*;
 use rand::Rng;
 
@@ -16,8 +16,8 @@ pub fn spawn_zombies(mut commands: Commands, time: Res<Time>, mut spawn_timer: R
         let start_x = -SCREEN_WIDTH / 2.0 + TILE_SIZE / 2.0 + 50.0;
         let start_y = -grid_height_px / 2.0 + TILE_SIZE / 2.0;
 
-        let x = start_x + (COLS as f32) * TILE_SIZE + 40.0; // Start off-screen right
-        let y = start_y + row as f32 * TILE_SIZE;
+        let x = (COLS as f32).mul_add(TILE_SIZE, start_x) + 40.0; // Start off-screen right
+        let y = (row as f32).mul_add(TILE_SIZE, start_y);
 
         let parent = commands
             .spawn((

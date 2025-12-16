@@ -1,5 +1,5 @@
-use crate::components::*;
-use crate::constants::*;
+use crate::components::{SunText, PlantType, PlantButton};
+use crate::constants::{ROWS, TILE_SIZE, SCREEN_WIDTH, COLS, COLOR_GRASS_1, COLOR_GRASS_2, COLOR_SUN_TEXT, COST_PEASHOOTER, COLOR_PEASHOOTER_HEAD, COST_SUNFLOWER, COLOR_SUNFLOWER_PETALS, COST_WALLNUT, COLOR_WALLNUT_BODY, COST_POTATOMINE, COLOR_POTATOMINE_BODY};
 use bevy::prelude::*;
 
 pub fn setup(mut commands: Commands) {
@@ -27,8 +27,8 @@ pub fn setup(mut commands: Commands) {
                     ..default()
                 },
                 transform: Transform::from_xyz(
-                    start_x + col as f32 * TILE_SIZE,
-                    start_y + row as f32 * TILE_SIZE,
+                    (col as f32).mul_add(TILE_SIZE, start_x),
+                    (row as f32).mul_add(TILE_SIZE, start_y),
                     0.0,
                 ),
                 ..default()
@@ -89,7 +89,7 @@ pub fn setup(mut commands: Commands) {
                     height: Val::Px(60.0),
                     position_type: PositionType::Absolute,
                     right: Val::Px(10.0),
-                    top: Val::Px(50.0 + i as f32 * 70.0),
+                    top: Val::Px((i as f32).mul_add(70.0, 50.0)),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     flex_direction: FlexDirection::Column,
@@ -113,7 +113,7 @@ pub fn setup(mut commands: Commands) {
                 });
                 parent.spawn(
                     TextBundle::from_section(
-                        format!("{}\n{}", label, cost),
+                        format!("{label}\n{cost}"),
                         TextStyle {
                             font_size: 16.0,
                             color: Color::WHITE,

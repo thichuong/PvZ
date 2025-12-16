@@ -1,5 +1,5 @@
-use crate::components::*;
-use crate::constants::*;
+use crate::components::{Zombie, Plant, ZombieState, PlantType, Explosion, Particle, Bullet};
+use crate::constants::ZOMBIE_EAT_DPS;
 use bevy::prelude::*;
 use rand::Rng;
 
@@ -10,7 +10,7 @@ pub fn zombie_eat_system(
     mut zombie_query: Query<(Entity, &Transform, &mut Zombie)>,
     mut plant_query: Query<(Entity, &Transform, &mut Plant)>,
 ) {
-    for (_zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
+    for (_zombie_entity, zombie_transform, mut zombie) in &mut zombie_query {
         match zombie.state {
             ZombieState::Walking => {
                 // Check if colliding with any plant
@@ -134,7 +134,7 @@ pub fn collision_system(
     mut zombie_query: Query<(Entity, &Transform, &mut Zombie)>,
 ) {
     for (bullet_entity, bullet_transform) in bullet_query.iter() {
-        for (zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
+        for (zombie_entity, zombie_transform, mut zombie) in &mut zombie_query {
             let distance = bullet_transform
                 .translation
                 .truncate()
@@ -157,11 +157,11 @@ pub fn explosion_damage_system(
     mut explosion_query: Query<(Entity, &Transform, &mut Explosion)>,
     mut zombie_query: Query<(Entity, &Transform, &mut Zombie)>,
 ) {
-    for (exp_entity, exp_transform, mut explosion) in explosion_query.iter_mut() {
+    for (exp_entity, exp_transform, mut explosion) in &mut explosion_query {
         // Apply damage to all zombies in range
         let exp_pos = exp_transform.translation.truncate();
 
-        for (zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
+        for (zombie_entity, zombie_transform, mut zombie) in &mut zombie_query {
             let z_pos = zombie_transform.translation.truncate();
             if exp_pos.distance(z_pos) <= explosion.radius {
                 zombie.health -= explosion.damage * time.delta_seconds();

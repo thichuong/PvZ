@@ -18,7 +18,7 @@ pub struct Plant {
     pub armed: bool,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum ZombieState {
     Walking,
     Eating(Entity), // Entity being eaten
