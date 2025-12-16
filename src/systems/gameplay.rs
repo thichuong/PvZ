@@ -15,7 +15,7 @@ pub fn plant_action(
         match plant.plant_type {
             PlantType::Peashooter => {
                 if plant.timer.finished() {
-                    let spawn_pos = transform.translation + Vec3::new(40.0, 20.0, 0.0);
+                    let spawn_pos = transform.translation + Vec3::new(40.0, 20.0, 3.0);
                     commands.spawn((
                         SpriteBundle {
                             sprite: Sprite {
