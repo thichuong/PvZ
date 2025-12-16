@@ -65,3 +65,6 @@ pub struct Particle {
     pub velocity: Vec2,
     pub timer: Timer,
 }
+
+#[derive(Component)]
+pub struct Cursor;

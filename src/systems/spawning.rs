@@ -133,131 +133,129 @@ pub fn spawn_plant(
         ))
         .id();
 
+    commands.entity(parent).with_children(|parent| {
+        spawn_plant_visuals(parent, plant_type, 1.0);
+    });
+}
+
+pub fn spawn_plant_visuals(parent: &mut ChildBuilder, plant_type: PlantType, alpha: f32) {
     match plant_type {
         PlantType::Peashooter => {
-            commands.entity(parent).with_children(|parent| {
-                // Stem
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_PEASHOOTER_STEM,
-                        custom_size: Some(Vec2::new(10.0, 40.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, -20.0, 0.1),
+            // Stem
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_PEASHOOTER_STEM.with_a(alpha),
+                    custom_size: Some(Vec2::new(10.0, 40.0)),
                     ..default()
-                });
-                // Head
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_PEASHOOTER_HEAD,
-                        custom_size: Some(Vec2::new(30.0, 30.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, 15.0, 0.2),
+                },
+                transform: Transform::from_xyz(0.0, -20.0, 0.1),
+                ..default()
+            });
+            // Head
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_PEASHOOTER_HEAD.with_a(alpha),
+                    custom_size: Some(Vec2::new(30.0, 30.0)),
                     ..default()
-                });
-                // Snout
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_PEASHOOTER_SNOUT,
-                        custom_size: Some(Vec2::new(20.0, 15.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(20.0, 15.0, 0.1),
+                },
+                transform: Transform::from_xyz(0.0, 15.0, 0.2),
+                ..default()
+            });
+            // Snout
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_PEASHOOTER_SNOUT.with_a(alpha),
+                    custom_size: Some(Vec2::new(20.0, 15.0)),
                     ..default()
-                });
+                },
+                transform: Transform::from_xyz(20.0, 15.0, 0.1),
+                ..default()
             });
         }
         PlantType::Sunflower => {
-            commands.entity(parent).with_children(|parent| {
-                // Stem
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_SUNFLOWER_STEM,
-                        custom_size: Some(Vec2::new(10.0, 40.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, -20.0, 0.1),
+            // Stem
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_SUNFLOWER_STEM.with_a(alpha),
+                    custom_size: Some(Vec2::new(10.0, 40.0)),
                     ..default()
-                });
-                // Petals
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_SUNFLOWER_PETALS,
-                        custom_size: Some(Vec2::new(50.0, 50.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, 10.0, 0.2),
+                },
+                transform: Transform::from_xyz(0.0, -20.0, 0.1),
+                ..default()
+            });
+            // Petals
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_SUNFLOWER_PETALS.with_a(alpha),
+                    custom_size: Some(Vec2::new(50.0, 50.0)),
                     ..default()
-                });
-                // Face
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_SUNFLOWER_FACE,
-                        custom_size: Some(Vec2::new(30.0, 30.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, 10.0, 0.3),
+                },
+                transform: Transform::from_xyz(0.0, 10.0, 0.2),
+                ..default()
+            });
+            // Face
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_SUNFLOWER_FACE.with_a(alpha),
+                    custom_size: Some(Vec2::new(30.0, 30.0)),
                     ..default()
-                });
+                },
+                transform: Transform::from_xyz(0.0, 10.0, 0.3),
+                ..default()
             });
         }
         PlantType::WallNut => {
-            commands.entity(parent).with_children(|parent| {
-                // Body
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_WALLNUT_BODY,
-                        custom_size: Some(Vec2::new(50.0, 60.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, 0.0, 0.2),
+            // Body
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_WALLNUT_BODY.with_a(alpha),
+                    custom_size: Some(Vec2::new(50.0, 60.0)),
                     ..default()
-                });
-                // Eyes
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_WALLNUT_FACE,
-                        custom_size: Some(Vec2::new(10.0, 10.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(-10.0, 10.0, 0.3),
+                },
+                transform: Transform::from_xyz(0.0, 0.0, 0.2),
+                ..default()
+            });
+            // Eyes
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_WALLNUT_FACE.with_a(alpha),
+                    custom_size: Some(Vec2::new(10.0, 10.0)),
                     ..default()
-                });
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_WALLNUT_FACE,
-                        custom_size: Some(Vec2::new(10.0, 10.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(10.0, 10.0, 0.3),
+                },
+                transform: Transform::from_xyz(-10.0, 10.0, 0.3),
+                ..default()
+            });
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_WALLNUT_FACE.with_a(alpha),
+                    custom_size: Some(Vec2::new(10.0, 10.0)),
                     ..default()
-                });
+                },
+                transform: Transform::from_xyz(10.0, 10.0, 0.3),
+                ..default()
             });
         }
         PlantType::PotatoMine => {
-            commands.entity(parent).with_children(|parent| {
-                // Determine if armed color (will act as visual indicator)
-                // Actually, visual update is better in system, but for now just spawn static
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_POTATOMINE_BODY,
-                        custom_size: Some(Vec2::new(30.0, 20.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, -20.0, 0.2),
+            // Determine if armed color (will act as visual indicator)
+            // Actually, visual update is better in system, but for now just spawn static
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_POTATOMINE_BODY.with_a(alpha),
+                    custom_size: Some(Vec2::new(30.0, 20.0)),
                     ..default()
-                });
-                // Red light (initially off/small)
-                parent.spawn(SpriteBundle {
-                    sprite: Sprite {
-                        color: COLOR_POTATOMINE_ARMED,
-                        custom_size: Some(Vec2::new(5.0, 5.0)),
-                        ..default()
-                    },
-                    transform: Transform::from_xyz(0.0, -10.0, 0.3),
+                },
+                transform: Transform::from_xyz(0.0, -20.0, 0.2),
+                ..default()
+            });
+            // Red light (initially off/small)
+            parent.spawn(SpriteBundle {
+                sprite: Sprite {
+                    color: COLOR_POTATOMINE_ARMED.with_a(alpha),
+                    custom_size: Some(Vec2::new(5.0, 5.0)),
                     ..default()
-                });
+                },
+                transform: Transform::from_xyz(0.0, -10.0, 0.3),
+                ..default()
             });
         }
     }

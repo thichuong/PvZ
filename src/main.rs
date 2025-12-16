@@ -11,7 +11,7 @@ use resources::{GameState, SpawnTimer};
 use systems::{
     combat::{collision_system, explosion_damage_system, zombie_eat_system},
     gameplay::{move_bullets, move_zombies, plant_action},
-    input::{button_system, input_system},
+    input::{button_system, cursor_system, input_system},
     particles::particle_system,
     setup::setup,
     spawning::spawn_zombies,
@@ -36,6 +36,7 @@ fn main() {
             (
                 input_system,
                 button_system, // UI Clicks
+                cursor_system,
                 spawn_zombies,
                 plant_action,
                 move_bullets,

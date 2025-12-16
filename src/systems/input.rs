@@ -1,10 +1,10 @@
-use crate::components::{GridCell, Plant, PlantType, Tool, ToolButton};
+use crate::components::{Cursor, GridCell, Plant, PlantType, Tool, ToolButton};
 use crate::constants::{
     COLS, COST_PEASHOOTER, COST_POTATOMINE, COST_SUNFLOWER, COST_WALLNUT, ROWS, SCREEN_WIDTH,
     TILE_SIZE,
 };
 use crate::resources::GameState;
-use crate::systems::spawning::spawn_plant;
+use crate::systems::spawning::{spawn_plant, spawn_plant_visuals};
 use bevy::prelude::*;
 
 #[allow(clippy::type_complexity)]
@@ -30,6 +30,98 @@ pub fn button_system(
                 } else {
                     *color = Color::DARK_GRAY.into();
                 }
+            }
+        }
+    }
+}
+
+pub fn cursor_system(
+    mut commands: Commands,
+    windows: Query<&Window>,
+    camera_q: Query<(&Camera, &GlobalTransform)>,
+    mut cursor_q: Query<(Entity, &mut Transform), With<Cursor>>,
+    game_state: Res<GameState>,
+    mut current_tool: Local<Option<Tool>>,
+) {
+    let Ok(window) = windows.get_single() else {
+        return;
+    };
+    let Ok((camera, camera_transform)) = camera_q.get_single() else {
+        return;
+    };
+
+    let cursor_entity = if let Ok((entity, ..)) = cursor_q.get_single() {
+        entity
+    } else {
+        commands
+            .spawn((
+                SpatialBundle {
+                    transform: Transform::from_scale(Vec3::splat(1.0)),
+                    visibility: Visibility::Visible,
+                    ..default()
+                },
+                Cursor,
+            ))
+            .id()
+    };
+
+    // Update position
+    if let Some(world_position) = window
+        .cursor_position()
+        .and_then(|cursor| camera.viewport_to_world(camera_transform, cursor))
+        .map(|ray| ray.origin.truncate())
+    {
+        if let Ok((_, mut transform)) = cursor_q.get_mut(cursor_entity) {
+            transform.translation = world_position.extend(999.0);
+        }
+    }
+
+    if *current_tool != Some(game_state.selected_tool) {
+        *current_tool = Some(game_state.selected_tool);
+
+        // Remove children
+        commands.entity(cursor_entity).despawn_descendants();
+
+        match game_state.selected_tool {
+            Tool::Plant(pt) => {
+                commands.entity(cursor_entity).with_children(|parent| {
+                    spawn_plant_visuals(parent, pt, 0.5);
+                });
+            }
+            Tool::Shovel => {
+                commands.entity(cursor_entity).with_children(|parent| {
+                    // Simple Shovel visual (copying setup)
+                    // Handle Loop
+                    parent.spawn(SpriteBundle {
+                        sprite: Sprite {
+                            color: Color::rgb(0.4, 0.2, 0.1).with_a(0.8), // Brown transparent
+                            custom_size: Some(Vec2::new(12.0, 4.0)),
+                            ..default()
+                        },
+                        transform: Transform::from_xyz(0.0, 15.0, 0.1),
+                        ..default()
+                    });
+                    // Shaft
+                    parent.spawn(SpriteBundle {
+                        sprite: Sprite {
+                            color: Color::rgb(0.4, 0.2, 0.1).with_a(0.8),
+                            custom_size: Some(Vec2::new(4.0, 12.0)),
+                            ..default()
+                        },
+                        transform: Transform::from_xyz(0.0, 7.0, 0.1),
+                        ..default()
+                    });
+                    // Blade
+                    parent.spawn(SpriteBundle {
+                        sprite: Sprite {
+                            color: Color::SILVER.with_a(0.8),
+                            custom_size: Some(Vec2::new(16.0, 14.0)),
+                            ..default()
+                        },
+                        transform: Transform::from_xyz(0.0, -5.0, 0.1),
+                        ..default()
+                    });
+                });
             }
         }
     }
