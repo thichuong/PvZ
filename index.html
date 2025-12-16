@@ -19,8 +19,16 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
     <link rel="manifest" href="manifest.json">
     
     
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <!-- PWA Meta Tags -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <meta name="theme_color" content="#222222">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PvZ Bevy">
     <style>
         body {
             margin: 0;
@@ -29,15 +37,35 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
+            /* Prevent scrolling */
+            touch-action: none;
+            /* Prevent browser zooming/panning gestures */
         }
 
         canvas {
             background-color: black;
+            display: block;
+            /* Remove bottom margin/gap */
+            outline: none;
+            /* Remove focus outline */
         }
     </style>
-<link rel="modulepreload" href="/PvZ/pvz_bevy-98264ee31abcc969.js" crossorigin="anonymous" integrity="sha384-OPHLA4GNvMYozqlj7P/x3IVvXXUD/YwBkzaWGJAsFhs+o5bmpz7XdEx3MyZ/4ppb"><link rel="preload" href="/PvZ/pvz_bevy-98264ee31abcc969_bg.wasm" crossorigin="anonymous" integrity="sha384-nNrOHVDEQNShceaiR5JgSk2ggbEoXyD2NWA2UIoIwjiD1dHiT+BE3Rcw6HfftBBh" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/PvZ/pvz_bevy-98264ee31abcc969.js" crossorigin="anonymous" integrity="sha384-96IIv9VoVaphks7cywhhCoR/wXriUx75gQRIYRywjC6OeNkwo35EkaS1Z2OprhBz"><link rel="preload" href="/PvZ/pvz_bevy-98264ee31abcc969_bg.wasm" crossorigin="anonymous" integrity="sha384-bdcKu0GRxNchOl+SVYrQ7Oqa1613LaPpsrqWYbNHGHumhW2CUn6isg3eh72fF3wX" as="fetch" type="application/wasm"></head>
 
 <body>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('./sw.js').then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -291,12 +291,12 @@ function wasm_bindgen__convert__closures_____invoke__h0e7614b441f971b1(arg0, arg
     wasm.wasm_bindgen__convert__closures_____invoke__h0e7614b441f971b1(arg0, arg1, arg2);
 }
 
-function wasm_bindgen__convert__closures_____invoke__h66adb597385f6132(arg0, arg1) {
-    wasm.wasm_bindgen__convert__closures_____invoke__h66adb597385f6132(arg0, arg1);
-}
-
 function wasm_bindgen__convert__closures_____invoke__h1f9b3806d1c787f9(arg0, arg1, arg2, arg3) {
     wasm.wasm_bindgen__convert__closures_____invoke__h1f9b3806d1c787f9(arg0, arg1, arg2, arg3);
+}
+
+function wasm_bindgen__convert__closures_____invoke__h66adb597385f6132(arg0, arg1) {
+    wasm.wasm_bindgen__convert__closures_____invoke__h66adb597385f6132(arg0, arg1);
 }
 
 const __wbindgen_enum_GamepadMappingType = ["", "standard"];
