@@ -1,5 +1,8 @@
-use crate::components::{PlantButton, GridCell, Plant, PlantType};
-use crate::constants::{ROWS, TILE_SIZE, SCREEN_WIDTH, COLS, COST_PEASHOOTER, COST_SUNFLOWER, COST_WALLNUT, COST_POTATOMINE};
+use crate::components::{GridCell, Plant, PlantButton, PlantType};
+use crate::constants::{
+    COLS, COST_PEASHOOTER, COST_POTATOMINE, COST_SUNFLOWER, COST_WALLNUT, ROWS, SCREEN_WIDTH,
+    TILE_SIZE,
+};
 use crate::resources::GameState;
 use crate::systems::spawning::spawn_plant;
 use bevy::prelude::*;
@@ -41,13 +44,11 @@ pub fn input_system(
     existing_plants: Query<&GridCell, With<Plant>>,
 ) {
     if mouse.just_pressed(MouseButton::Left) {
-        let (camera, camera_transform) = match camera_q.get_single() {
-            Ok(c) => c,
-            Err(_) => return,
+        let Ok((camera, camera_transform)) = camera_q.get_single() else {
+            return;
         };
-        let window = match windows.get_single() {
-            Ok(w) => w,
-            Err(_) => return,
+        let Ok(window) = windows.get_single() else {
+            return;
         };
 
         if let Some(world_position) = window

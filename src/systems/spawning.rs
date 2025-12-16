@@ -1,5 +1,10 @@
-use crate::components::{Zombie, ZombieState, PlantType, Plant, GridCell};
-use crate::constants::{ROWS, TILE_SIZE, SCREEN_WIDTH, COLS, COLOR_ZOMBIE_LEGS, COLOR_ZOMBIE_BODY, COLOR_ZOMBIE_HEAD, COLOR_ZOMBIE_ARM, COLOR_PEASHOOTER_STEM, COLOR_PEASHOOTER_HEAD, COLOR_PEASHOOTER_SNOUT, COLOR_SUNFLOWER_STEM, COLOR_SUNFLOWER_PETALS, COLOR_SUNFLOWER_FACE, COLOR_WALLNUT_BODY, COLOR_WALLNUT_FACE, COLOR_POTATOMINE_BODY, COLOR_POTATOMINE_ARMED};
+use crate::components::{GridCell, Plant, PlantType, Zombie, ZombieState};
+use crate::constants::{
+    COLOR_PEASHOOTER_HEAD, COLOR_PEASHOOTER_SNOUT, COLOR_PEASHOOTER_STEM, COLOR_POTATOMINE_ARMED,
+    COLOR_POTATOMINE_BODY, COLOR_SUNFLOWER_FACE, COLOR_SUNFLOWER_PETALS, COLOR_SUNFLOWER_STEM,
+    COLOR_WALLNUT_BODY, COLOR_WALLNUT_FACE, COLOR_ZOMBIE_ARM, COLOR_ZOMBIE_BODY, COLOR_ZOMBIE_HEAD,
+    COLOR_ZOMBIE_LEGS, COLS, ROWS, SCREEN_WIDTH, TILE_SIZE,
+};
 use crate::resources::SpawnTimer;
 use bevy::prelude::*;
 use rand::Rng;
@@ -119,7 +124,7 @@ pub fn spawn_plant(
                 ..default()
             },
             Plant {
-                plant_type,
+                kind: plant_type,
                 timer,
                 health,
                 armed,

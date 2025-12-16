@@ -1,4 +1,4 @@
-use crate::components::{Zombie, Plant, ZombieState, PlantType, Explosion, Particle, Bullet};
+use crate::components::{Bullet, Explosion, Particle, Plant, PlantType, Zombie, ZombieState};
 use crate::constants::ZOMBIE_EAT_DPS;
 use bevy::prelude::*;
 use rand::Rng;
@@ -23,7 +23,7 @@ pub fn zombie_eat_system(
                         // Collision!
 
                         // Special Case: Potato Mine
-                        if plant.plant_type == PlantType::PotatoMine && plant.armed {
+                        if plant.kind == PlantType::PotatoMine && plant.armed {
                             // BOOM - Spawn explosion
                             commands.spawn((
                                 Explosion {
@@ -74,7 +74,7 @@ pub fn zombie_eat_system(
                 // Check if plant still exists
                 if let Ok((p_entity, p_transform, mut plant)) = plant_query.get_mut(plant_entity) {
                     // CHECK: If it turned into an ACTVE potato mine while being eaten, BOOM
-                    if plant.plant_type == PlantType::PotatoMine && plant.armed {
+                    if plant.kind == PlantType::PotatoMine && plant.armed {
                         commands.spawn((
                             Explosion {
                                 timer: Timer::from_seconds(0.5, TimerMode::Once),

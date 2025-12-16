@@ -10,7 +10,7 @@ pub enum PlantType {
 
 #[derive(Component)]
 pub struct Plant {
-    pub plant_type: PlantType,
+    pub kind: PlantType,
     pub timer: Timer,
     pub health: f32,
 

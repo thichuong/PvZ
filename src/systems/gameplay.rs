@@ -1,5 +1,5 @@
-use crate::components::{Plant, PlantType, Bullet, Zombie, ZombieState};
-use crate::constants::{COLOR_BULLET, BULLET_SPEED, SCREEN_WIDTH, ZOMBIE_SPEED};
+use crate::components::{Bullet, Plant, PlantType, Zombie, ZombieState};
+use crate::constants::{BULLET_SPEED, COLOR_BULLET, SCREEN_WIDTH, ZOMBIE_SPEED};
 use crate::resources::GameState;
 use bevy::prelude::*;
 
@@ -12,7 +12,7 @@ pub fn plant_action(
     for (mut plant, transform) in &mut query {
         plant.timer.tick(time.delta());
 
-        match plant.plant_type {
+        match plant.kind {
             PlantType::Peashooter => {
                 if plant.timer.finished() {
                     let spawn_pos = transform.translation + Vec3::new(40.0, 20.0, 3.0);
@@ -41,7 +41,7 @@ pub fn plant_action(
                     // Visual indication? For prototype, maybe just logic.
                 }
             }
-            _ => {}
+            PlantType::WallNut => {}
         }
     }
 }
