@@ -9,7 +9,7 @@ mod systems;
 use constants::{SCREEN_HEIGHT, SCREEN_WIDTH};
 use resources::{GameState, SpawnTimer};
 use systems::{
-    combat::{collision_system, zombie_eat_system},
+    combat::{collision_system, explosion_damage_system, zombie_eat_system},
     gameplay::{move_bullets, move_zombies, plant_action},
     input::{button_system, input_system},
     setup::setup,
@@ -41,6 +41,7 @@ fn main() {
                 move_zombies,
                 zombie_eat_system, // Interactions
                 collision_system,
+                explosion_damage_system,
                 ui_system,
             ),
         )

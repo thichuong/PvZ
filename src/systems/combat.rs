@@ -23,9 +23,20 @@ pub fn zombie_eat_system(
 
                         // Special Case: Potato Mine
                         if plant.plant_type == PlantType::PotatoMine && plant.armed {
-                            // BOOM
+                            // BOOM - Spawn explosion
+                            commands.spawn((
+                                Explosion {
+                                    timer: Timer::from_seconds(0.5, TimerMode::Once),
+                                    radius: 120.0, // 3x3 approx (1.5 * 80)
+                                    damage: 1000.0,
+                                },
+                                SpatialBundle {
+                                    transform: *plant_transform,
+                                    ..default()
+                                },
+                            ));
                             commands.entity(plant_entity).despawn_recursive();
-                            commands.entity(zombie_entity).despawn_recursive();
+                            // Zombie is not despawned here, will be caught by explosion system
                             break;
                         }
 
@@ -36,11 +47,29 @@ pub fn zombie_eat_system(
                 }
             }
             ZombieState::Eating(plant_entity) => {
-                // Check if plant still exists and damage it
-                if let Ok((_, _, mut plant)) = plant_query.get_mut(plant_entity) {
+                // Check if plant still exists
+                if let Ok((p_entity, p_transform, mut plant)) = plant_query.get_mut(plant_entity) {
+                    // CHECK: If it turned into an ACTVE potato mine while being eaten, BOOM
+                    if plant.plant_type == PlantType::PotatoMine && plant.armed {
+                        commands.spawn((
+                            Explosion {
+                                timer: Timer::from_seconds(0.5, TimerMode::Once),
+                                radius: 120.0,
+                                damage: 1000.0,
+                            },
+                            SpatialBundle {
+                                transform: *p_transform,
+                                ..default()
+                            },
+                        ));
+                        commands.entity(p_entity).despawn_recursive();
+                        zombie.state = ZombieState::Walking; // Stop eating
+                        continue;
+                    }
+
                     plant.health -= ZOMBIE_EAT_DPS * time.delta_seconds();
                     if plant.health <= 0.0 {
-                        commands.entity(plant_entity).despawn_recursive();
+                        commands.entity(p_entity).despawn_recursive();
                         zombie.state = ZombieState::Walking;
                     }
                 } else {
@@ -71,6 +100,33 @@ pub fn collision_system(
                     commands.entity(zombie_entity).despawn_recursive();
                 }
             }
+        }
+    }
+}
+// Explosion logic
+pub fn explosion_damage_system(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut explosion_query: Query<(Entity, &Transform, &mut Explosion)>,
+    mut zombie_query: Query<(Entity, &Transform, &mut Zombie)>,
+) {
+    for (exp_entity, exp_transform, mut explosion) in explosion_query.iter_mut() {
+        // Apply damage to all zombies in range
+        let exp_pos = exp_transform.translation.truncate();
+
+        for (zombie_entity, zombie_transform, mut zombie) in zombie_query.iter_mut() {
+            let z_pos = zombie_transform.translation.truncate();
+            if exp_pos.distance(z_pos) <= explosion.radius {
+                zombie.health -= explosion.damage * time.delta_seconds();
+                if zombie.health <= 0.0 {
+                    commands.entity(zombie_entity).despawn_recursive();
+                }
+            }
+        }
+
+        explosion.timer.tick(time.delta());
+        if explosion.timer.finished() {
+            commands.entity(exp_entity).despawn_recursive();
         }
     }
 }

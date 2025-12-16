@@ -107,7 +107,7 @@ pub fn spawn_plant(
         PlantType::Sunflower => timer = Timer::from_seconds(5.0, TimerMode::Repeating),
         PlantType::WallNut => health = 1000.0,
         PlantType::PotatoMine => {
-            timer = Timer::from_seconds(15.0, TimerMode::Once); // Arming time
+            timer = Timer::from_seconds(2.0, TimerMode::Once); // Arming time
             health = 50.0;
         }
     }

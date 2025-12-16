@@ -45,3 +45,10 @@ pub struct SunText;
 // Marked for buttons
 #[derive(Component)]
 pub struct PlantButton(pub PlantType);
+
+#[derive(Component)]
+pub struct Explosion {
+    pub timer: Timer,
+    pub radius: f32,
+    pub damage: f32,
+}
