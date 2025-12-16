@@ -37,7 +37,7 @@ pub fn setup(mut commands: Commands) {
     }
 
     // UI Panel (Right side)
-    let panel_x = SCREEN_WIDTH / 2.0 - 90.0; // unused variable in original but let's keep it or remove it? original had it.
+    // let panel_x = SCREEN_WIDTH / 2.0 - 90.0; // Unused
 
     // Sun Text
     commands.spawn((

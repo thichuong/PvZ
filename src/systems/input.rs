@@ -40,8 +40,14 @@ pub fn input_system(
     existing_plants: Query<&GridCell, With<Plant>>,
 ) {
     if mouse.just_pressed(MouseButton::Left) {
-        let (camera, camera_transform) = camera_q.single();
-        let window = windows.single();
+        let (camera, camera_transform) = match camera_q.get_single() {
+            Ok(c) => c,
+            Err(_) => return,
+        };
+        let window = match windows.get_single() {
+            Ok(w) => w,
+            Err(_) => return,
+        };
 
         if let Some(world_position) = window
             .cursor_position()
